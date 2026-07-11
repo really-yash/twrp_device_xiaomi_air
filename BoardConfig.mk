@@ -149,6 +149,11 @@ VENDOR_SECURITY_PATCH := 2099-12-31
 BOARD_AVB_ENABLE := true
 BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 
+# Crypto
+TW_INCLUDE_CRYPTO := false
+TW_INCLUDE_CRYPTO_FBE := false
+TW_INCLUDE_FBE_METADATA_DECRYPT := false
+
 # TWRP Configuration
 RECOVERY_SDCARD_ON_DATA := true
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
