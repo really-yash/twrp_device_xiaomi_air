@@ -57,7 +57,7 @@ BOARD_MKBOOTIMG_ARGS += \
 	--pagesize $(BOARD_KERNEL_PAGESIZE) --board "" \
 	--kernel_offset $(BOARD_KERNEL_OFFSET) \
 	--ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
-	--tags_offset $(BOARD_TAGS_OFFSET) \
+	--tags_offset $(BOARD_KERNEL_TAGS_OFFSET) \
 	--header_version $(BOARD_BOOT_HEADER_VERSION) \
 	--dtb $(BOARD_PREBUILT_DTBIMAGE_DIR)/mt6835.dtb \
 	--dtb_offset $(BOARD_DTB_OFFSET)
