@@ -50,6 +50,12 @@ TARGET_NO_KERNEL_OVERRIDE := true
 # Workaround to make lineage's soong generator work
 TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
 
+# Kernel modules
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES := $(wildcard $(KERNEL_PATH)/vendor_ramdisk/*.ko)
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.vendor_ramdisk))
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(KERNEL_PATH)/modules.load.recovery))
+BOOT_KERNEL_MODULES := $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD) $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD)
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := air
 TARGET_NO_BOOTLOADER := true
