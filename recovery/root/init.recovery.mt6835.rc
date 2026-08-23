@@ -8,4 +8,6 @@ on boot
     insmod /vendor/lib/modules/lct_tp.ko
     insmod /vendor/lib/modules/touch_boost.ko
     insmod /vendor/lib/modules/mtk_ioctl_touch_boost.ko
+    exec u:r:recovery:s0 -- /system/bin/sh -c "dmesg > /tmp/insmod_debug.log"
+
 
