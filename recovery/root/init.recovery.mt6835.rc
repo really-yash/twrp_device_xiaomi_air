@@ -1,5 +1,10 @@
 on init
     setprop sys.usb.ffs.aio_compat 1
     setprop sys.usb.configfs 1
-
     setprop sys.usb.controller "11201000.usb0"
+
+on boot
+    insmod /vendor/lib/modules/lct_tp.ko
+    insmod /vendor/lib/modules/ft8057p_spi.ko
+    insmod /vendor/lib/modules/touch_boost.ko
+    insmod /vendor/lib/modules/mtk_ioctl_touch_boost.ko
