@@ -13,6 +13,7 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 
 # A/B
+AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS := \
     boot \
     init_boot \
@@ -195,6 +196,7 @@ TW_INCLUDE_RESETPROP := true
 # Debug
 TARGET_USES_LOGD := true
 TWRP_INCLUDE_LOGCAT := true
+
 # OrangeFox specific variables
 OF_MAINTAINER := Yash
 OF_QUICK_BACKUP_LIST := "/data /sdcard1"
