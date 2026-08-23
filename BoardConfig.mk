@@ -199,7 +199,6 @@ TWRP_INCLUDE_LOGCAT := true
 
 # OrangeFox specific variables
 OF_MAINTAINER := Yash
-OF_QUICK_BACKUP_LIST := /data;/sdcard1
 FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER := 1
 FOX_ASH_IS_BASH := 1
 TARGET_ARCH := arm64
