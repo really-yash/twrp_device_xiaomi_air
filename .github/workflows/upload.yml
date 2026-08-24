@@ -1,0 +1,21 @@
+name: Upload Huge Kernel Files
+on: workflow_dispatch
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Files
+        run: |
+          mkdir -p dtb
+          wget "https://github.com/ChkDumps/redmi_air_dump/raw/refs/heads/missi-user-15-AP3A.240905.015.A2-OS2.0.205.0.VGQMIXM-release-keys/vendor_boot/dtb/01_dtbdump_MT6835.dtb" -O dtb/mt6835.dtb
+          wget "https://github.com/ChkDumps/redmi_air_dump/raw/refs/heads/missi-user-15-AP3A.240905.015.A2-OS2.0.205.0.VGQMIXM-release-keys/boot/kernel" -O Image.gz
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Yash"
+          git config --global user.email "bloxfruits_yash@example.com"
+          git add Image.gz dtb/mt6835.dtb
+          git commit -m "Upload massive kernel files"
+          git push
