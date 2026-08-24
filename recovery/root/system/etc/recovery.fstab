@@ -3,6 +3,7 @@
 
 # Dynamic Partitions (Logical)
 system                                          /system             ext4      ro                            wait,logical,first_stage_mount
+system_ext                                      /system_ext         ext4      ro                            wait,logical,first_stage_mount
 vendor                                          /vendor             ext4      ro                            wait,logical,first_stage_mount
 product                                         /product            ext4      ro                            wait,logical,first_stage_mount
 odm                                             /odm                ext4      ro                            wait,logical,first_stage_mount
@@ -11,6 +12,10 @@ vendor_dlkm                                     /vendor_dlkm        erofs     ro
 # Data and Crypto Partitions (HyperOS 2 / FBE v2)
 /dev/block/by-name/metadata                     /metadata           ext4      noatime,nosuid,nodev,discard  wait,check,formattable,first_stage_mount
 /dev/block/by-name/userdata                     /data               f2fs      noatime,nosuid,nodev,discard,inlinecrypt,reserve_root=32768,resgid=1065    wait,check,formattable,quota,resize,reservedsize=128m,checkpoint=fs,fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,metadata_encryption=aes-256-xts,keydirectory=/metadata/vold/metadata_encryption
+
+# External Storage (SD card + USB OTG)
+/devices/platform/soc/11240000.mmc*             /external_sd        auto      defaults                      voldmanaged=sdcard:auto
+/devices/platform/soc/*.usb/*.usb-*             /storage/usbotg     auto      defaults                      voldmanaged=usbotg:auto
 
 # Standard Mounts
 /dev/block/by-name/misc                         /misc               emmc      defaults                      defaults
