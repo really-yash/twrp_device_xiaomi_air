@@ -1,20 +1,21 @@
-name: Extract and Commit Kernel
+name: Extract and Commit Prebuilts
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  extract-kernel:
+  extract-and-commit:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y aria2 p7zip-full cpio erofs-utils
+          sudo apt-get update && sudo apt-get install -y aria2 p7zip-full cpio
           wget https://github.com/ssut/payload-dumper-go/releases/download/1.2.2/payload-dumper-go_1.2.2_linux_amd64.tar.gz
           tar -xf payload-dumper-go_1.2.2_linux_amd64.tar.gz
           sudo cp payload-dumper-go /usr/local/bin/
@@ -28,27 +29,33 @@ jobs:
           aria2c -x 16 -s 16 -k 1M --file-allocation=none --user-agent="Mozilla/5.0" -o rom.zip "https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS2.0.208.0.VGQINXM/air_in_global-ota_full-OS2.0.208.0.VGQINXM-user-15.0-93391672cc.zip"
           unzip -q rom.zip payload.bin && rm -f rom.zip
 
-      - name: Dump Boot Partition & Extract Kernel
-        run: |
-          payload-dumper-go -o dumped_images -p boot,dtbo payload.bin
-          rm -f payload.bin
-
-          # Unpack boot.img to get the raw kernel binary
+      - name: Dump Partitions & Extract Kernel
+        run: |  
+          # 1. Extract boot and dtbo from payload.bin
+          payload-dumper-go -o dumped_images -p boot,dtbo payload.bin  
+          
+          # 2. Create prebuilt directory inside the repo
+          mkdir -p prebuilt
+          
+          # 3. Copy dtbo.img directly
+          cp dumped_images/dtbo.img prebuilt/dtbo.img
+          
+          # 4. Unpack boot.img using magiskboot to extract the kernel binary
           cd dumped_images
           magiskboot unpack boot.img
-
-          # Move kernel and dtbo to the device tree prebuilt folder
+          
+          # Copy the extracted kernel back to the prebuilt folder
+          cp kernel ../prebuilt/kernel
           cd ..
-          mkdir -p prebuilt
-          cp dumped_images/kernel prebuilt/kernel
-          cp dumped_images/dtbo.img prebuilt/dtbo.img
-          rm -rf dumped_images
+          
+          # 5. Clean up source payload
+          rm -f payload.bin
 
-      - name: Commit and Push Kernel to Repo
+      - name: Commit and Push Prebuilts
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
           git add prebuilt/kernel prebuilt/dtbo.img
-          git commit -m "Auto-extract and commit kernel and dtbo for Redmi 13C 5G" || echo "No changes to commit"
+          git commit -m "Auto-commit extracted kernel and dtbo for Redmi 13C 5G" || echo "No changes to commit"
           git push
