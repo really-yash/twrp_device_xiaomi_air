@@ -49,7 +49,6 @@ BOARD_KERNEL_PAGESIZE := 4096
 # --- Android 15 / HyperOS 2 Version & Platform Flags ---
 PLATFORM_VERSION := 15
 PLATFORM_SECURITY_PATCH := 2024-08-01
-BOARD_SYSTEMSDK_VERSIONS := 35
 
 # --- A/B & Virtual A/B Partition Layout ---
 AB_OTA_UPDATER := true
@@ -62,7 +61,7 @@ BOARD_SUPER_PARTITION_SIZE := 9126805504
 BOARD_AIR_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product odm vendor_dlkm
 BOARD_AIR_DYNAMIC_PARTITIONS_SIZE := 9122611200
 
-# --- Partition Copy-Out Paths (Fixes dumpvars error) ---
+# --- Partition Copy-Out Paths ---
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
