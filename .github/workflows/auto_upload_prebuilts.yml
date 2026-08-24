@@ -1,0 +1,52 @@
+name: Auto-Commit Prebuilt Images
+on:
+  workflow_dispatch:
+
+# This permission allows the bot to push code to your repo
+permissions:
+  contents: write
+
+jobs:
+  upload_prebuilts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Device Tree
+        uses: actions/checkout@v4
+
+      - name: Free up disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: false
+
+      - name: Install payload-dumper-go  
+        run: |  
+          sudo apt-get update && sudo apt-get install -y aria2
+          wget https://github.com/ssut/payload-dumper-go/releases/download/1.2.2/payload-dumper-go_1.2.2_linux_amd64.tar.gz  
+          tar -xf payload-dumper-go_1.2.2_linux_amd64.tar.gz  
+          sudo cp payload-dumper-go /usr/local/bin/  
+
+      - name: Download ROM  
+        run: |  
+          aria2c -x 16 -s 16 -k 1M --file-allocation=none -o rom.zip "https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS2.0.208.0.VGQINXM/air_in_global-ota_full-OS2.0.208.0.VGQINXM-user-15.0-93391672cc.zip"
+          unzip -q rom.zip payload.bin && rm -f rom.zip
+
+      - name: Extract & Commit Prebuilts
+        run: |  
+          payload-dumper-go -o dumped_images -p vendor_boot,dtbo payload.bin  
+          
+          # Create the prebuilt folder and move the images there
+          mkdir -p prebuilt
+          cp dumped_images/dtbo.img prebuilt/
+          cp dumped_images/vendor_boot.img prebuilt/
+          
+          # Configure Git and push directly to your repository
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prebuilt/dtbo.img prebuilt/vendor_boot.img
+          git commit -m "Add A15 prebuilt vendor_boot and dtbo images"
+          git push
