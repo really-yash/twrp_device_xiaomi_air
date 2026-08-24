@@ -85,8 +85,10 @@ TW_USE_FSCRYPT_POLICY := 2
 TW_PREPARE_DATA_MEDIA_EARLY := true
 
 # --- Display & UI Configuration ---
+TARGET_SCREEN_WIDTH := 720
+TARGET_SCREEN_HEIGHT := 1600
 TARGET_SCREEN_DENSITY := 320
-TW_THEME := portrait_vhd
+TW_THEME := portrait_hdpi
 TW_Y_OFFSET := 0
 TW_H_OFFSET := 0
 
