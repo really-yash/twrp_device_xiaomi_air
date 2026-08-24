@@ -1,0 +1,4 @@
+/dev/input/event*       0660   root       input
+/dev/goodix_fp          0660   system     system
+/dev/esfp0              0660   system     system
+/dev/mtk_otp            0660   system     system
