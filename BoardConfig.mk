@@ -5,7 +5,6 @@
 
 DEVICE_PATH := device/xiaomi/air
 
-# For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
@@ -20,7 +19,7 @@ TARGET_CPU_VARIANT := generic
 TARGET_CPU_VARIANT_RUNTIME := cortex-a55
 TARGET_BOARD_PLATFORM := mt6835
 
-# --- 32-bit Companion Architecture (Optional Compatibility) ---
+# --- 32-bit Companion Architecture ---
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
@@ -39,19 +38,13 @@ BOARD_USES_METADATA_PARTITION := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 
 # --- Prebuilt Kernel & Device Tree Paths ---
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/vendor_boot.img-kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
 
-# --- Boot Image Header & Kernel Parameters (MT6835 GKI 2.0) ---
+# --- Boot Image Header Version ---
 BOARD_BOOTIMG_HEADER_VERSION := 4
-BOARD_KERNEL_BASE := 0x3fff8000
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_PAGESIZE := 4096
-BOARD_RAMDISK_OFFSET := 0x26f08000
-BOARD_KERNEL_TAGS_OFFSET := 0x07c88000
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
-BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 
 # --- Android 15 / HyperOS 2 Version & Platform Flags ---
 PLATFORM_VERSION := 15
