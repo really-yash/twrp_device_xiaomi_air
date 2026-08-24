@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  extract-and-commit:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -26,36 +26,23 @@ jobs:
 
       - name: Fast Download ROM
         run: |
-          aria2c -x 16 -s 16 -k 1M --file-allocation=none --user-agent="Mozilla/5.0" -o rom.zip "https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS2.0.208.0.VGQINXM/air_in_global-ota_full-OS2.0.208.0.VGQINXM-user-15.0-93391672cc.zip"
-          unzip -q rom.zip payload.bin && rm -f rom.zip
+          aria2c -x 16 -s 16 -k 1M --file-allocation=none -o rom.zip "https://bkt-sgp-miui-ota-update-alisgp.oss-ap-southeast-1.aliyuncs.com/OS2.0.208.0.VGQINXM/air_in_global-ota_full-OS2.0.208.0.VGQINXM-user-15.0-93391672cc.zip"
+          unzip -q rom.zip payload.bin
 
       - name: Dump Partitions & Extract Kernel
         run: |  
-          # 1. Extract boot and dtbo from payload.bin
           payload-dumper-go -o dumped_images -p boot,dtbo payload.bin  
-          
-          # 2. Create prebuilt directory inside the repo
           mkdir -p prebuilt
-          
-          # 3. Copy dtbo.img directly
           cp dumped_images/dtbo.img prebuilt/dtbo.img
-          
-          # 4. Unpack boot.img using magiskboot to extract the kernel binary
           cd dumped_images
           magiskboot unpack boot.img
-          
-          # Copy the extracted kernel back to the prebuilt folder
           cp kernel ../prebuilt/kernel
           cd ..
-          
-          # 5. Clean up source payload
-          rm -f payload.bin
 
-      - name: Commit and Push Prebuilts
+      - name: Extract & Commit Prebuilts
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          git add prebuilt/kernel prebuilt/dtbo.img
-          git commit -m "Auto-commit extracted kernel and dtbo for Redmi 13C 5G" || echo "No changes to commit"
-          git push
+          git add prebuilt/
+          git commit -m "Auto-commit extracted kernel and dtbo" || true
+          git push || true
