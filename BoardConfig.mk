@@ -55,6 +55,7 @@ AB_OTA_UPDATER := true
 BOARD_USES_AB_IMAGE := true
 BOARD_SUPER_PARTITION_BLOCK_DEVICES := super
 BOARD_SUPER_PARTITION_GROUPS := air_dynamic_partitions
+AB_OTA_PARTITIONS += boot system system_ext vendor product odm vendor_dlkm vendor_boot dtbo vbmeta
 
 # --- Dynamic Partition Sizing ---
 BOARD_SUPER_PARTITION_SIZE := 9126805504
