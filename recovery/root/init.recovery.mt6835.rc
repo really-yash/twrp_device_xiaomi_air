@@ -4,10 +4,6 @@ on init
     setprop sys.usb.controller "11201000.usb0"
 
 on boot
-    # Mount vendor_dlkm dynamically so the recovery can read the panel modules
-    mount erofs loop@ /dev/block/mapper/vendor_dlkm /vendor_dlkm || mount erofs /dev/block/by-name/vendor_dlkm /vendor_dlkm
-    
-    # Explicitly load FocalTech and core touch modules from the mounted path
     insmod /vendor_dlkm/lib/modules/ft8057p_spi.ko
     insmod /vendor_dlkm/lib/modules/lct_tp.ko
     insmod /vendor_dlkm/lib/modules/touch_boost.ko
