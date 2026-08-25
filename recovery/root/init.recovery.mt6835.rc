@@ -4,8 +4,8 @@ on init
     setprop sys.usb.controller "11201000.usb0"
 
 on boot
-    insmod /vendor_dlkm/lib/modules/ft8057p_spi.ko
-    insmod /vendor_dlkm/lib/modules/lct_tp.ko
-    insmod /vendor_dlkm/lib/modules/touch_boost.ko
-    insmod /vendor_dlkm/lib/modules/mtk_ioctl_touch_boost.ko
+    insmod /sbin/modules/ft8057p_spi.ko
+    insmod /sbin/modules/lct_tp.ko
+    insmod /sbin/modules/touch_boost.ko
+    insmod /sbin/modules/mtk_ioctl_touch_boost.ko
     exec u:r:recovery:s0 -- /system/bin/sh -c "dmesg > /tmp/insmod_debug.log"
