@@ -32,11 +32,11 @@ TARGET_NO_BOOTLOADER := true
 TARGET_OTA_ASSERT_DEVICE := air
 
 # --- Recovery Boot Mode ---
-# CONFIRMED via fastboot getvar all: no recovery_a/recovery_b partition exists.
-# This device packs the recovery ramdisk inside vendor_boot (standard GKI hdr4 pattern).
+# CONFIRMED: No recovery_a/b partition. Recovery ramdisk is packed into vendor_boot.
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
+TARGET_NO_RECOVERY := true
 TARGET_USES_MKE2FS := true
 BOARD_USES_METADATA_PARTITION := true
 BOARD_HAS_LARGE_FILESYSTEM := true
@@ -67,7 +67,7 @@ BOARD_SUPER_PARTITION_BLOCK_DEVICES := super
 BOARD_SUPER_PARTITION_GROUPS := air_dynamic_partitions
 AB_OTA_PARTITIONS += boot system system_ext vendor product odm vendor_dlkm vendor_boot dtbo vbmeta
 
-# --- Dynamic Partition Sizing (CORRECTED - real super size from getvar all) ---
+# --- Dynamic Partition Sizing ---
 BOARD_SUPER_PARTITION_SIZE := 7516192768
 BOARD_AIR_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product odm vendor_dlkm
 BOARD_AIR_DYNAMIC_PARTITIONS_SIZE := 7511998464
@@ -111,7 +111,7 @@ TW_INCLUDE_FASTBOOTD := true
 FOX_VIRTUAL_AB_DEVICE := 1
 FOX_VENDOR_BOOT_RECOVERY := 1
 BOARD_AVB_ENABLE := true
-TW_DISABLE_ALLOW_AVB_KEY_MISMATCH := false
+TW_DISABLE_ALLOW_AVB_KEY_MISMATCH := true
 TW_INCLUDE_REPACKTOOLS := true
 TW_USE_TOOLBOX := true
 
