@@ -31,10 +31,10 @@ TARGET_BOOTLOADER_BOARD_NAME := air
 TARGET_NO_BOOTLOADER := true
 TARGET_OTA_ASSERT_DEVICE := air
 
-# --- Recovery Boot Mode & Mounts ---
+# --- Recovery Boot Mode ---
+# ASSUMPTION (unverified): dedicated recovery_a/b partition exists.
+# If your device only has boot_a/b, flip this to true.
 BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 TARGET_USES_MKE2FS := true
 BOARD_USES_METADATA_PARTITION := true
 BOARD_HAS_LARGE_FILESYSTEM := true
@@ -42,6 +42,7 @@ BOARD_HAS_LARGE_FILESYSTEM := true
 # --- Prebuilt Kernel & Device Tree Paths ---
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+BOARD_INCLUDE_RECOVERY_DTBO := true
 
 # --- Boot Image Header Version ---
 BOARD_BOOTIMG_HEADER_VERSION := 4
@@ -105,3 +106,9 @@ BOARD_AVB_ENABLE := true
 TW_DISABLE_ALLOW_AVB_KEY_MISMATCH := false
 TW_INCLUDE_REPACKTOOLS := true
 TW_USE_TOOLBOX := true
+
+# --- AVB Signing ---
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 0
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
