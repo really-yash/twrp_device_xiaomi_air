@@ -32,12 +32,19 @@ TARGET_NO_BOOTLOADER := true
 TARGET_OTA_ASSERT_DEVICE := air
 
 # --- Recovery Boot Mode ---
-# ASSUMPTION (unverified): dedicated recovery_a/b partition exists.
-# If your device only has boot_a/b, flip this to true.
+# CONFIRMED via fastboot getvar all: no recovery_a/recovery_b partition exists.
+# This device packs the recovery ramdisk inside vendor_boot (standard GKI hdr4 pattern).
 BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 TARGET_USES_MKE2FS := true
 BOARD_USES_METADATA_PARTITION := true
 BOARD_HAS_LARGE_FILESYSTEM := true
+
+# --- Confirmed partition sizes (from fastboot getvar all) ---
+BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
+BOARD_DTBOIMG_PARTITION_SIZE := 8388608
 
 # --- Prebuilt Kernel & Device Tree Paths ---
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
@@ -60,10 +67,10 @@ BOARD_SUPER_PARTITION_BLOCK_DEVICES := super
 BOARD_SUPER_PARTITION_GROUPS := air_dynamic_partitions
 AB_OTA_PARTITIONS += boot system system_ext vendor product odm vendor_dlkm vendor_boot dtbo vbmeta
 
-# --- Dynamic Partition Sizing ---
-BOARD_SUPER_PARTITION_SIZE := 9126805504
+# --- Dynamic Partition Sizing (CORRECTED - real super size from getvar all) ---
+BOARD_SUPER_PARTITION_SIZE := 7516192768
 BOARD_AIR_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext vendor product odm vendor_dlkm
-BOARD_AIR_DYNAMIC_PARTITIONS_SIZE := 9122611200
+BOARD_AIR_DYNAMIC_PARTITIONS_SIZE := 7511998464
 
 # --- Partition Copy-Out Paths ---
 TARGET_COPY_OUT_VENDOR := vendor
@@ -102,6 +109,9 @@ TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 # --- Recovery Features & Flashing Safety ---
 TW_INCLUDE_FASTBOOTD := true
 FOX_VIRTUAL_AB_DEVICE := 1
+# EXPERIMENTAL - OrangeFox's own docs warn bootloops/bricks are possible with
+# this mode. Required here because there is no recovery_a/b partition.
+FOX_VENDOR_BOOT_RECOVERY := 1
 BOARD_AVB_ENABLE := true
 TW_DISABLE_ALLOW_AVB_KEY_MISMATCH := false
 TW_INCLUDE_REPACKTOOLS := true
