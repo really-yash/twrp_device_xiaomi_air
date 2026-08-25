@@ -5,6 +5,14 @@
 
 DEVICE_PATH := device/xiaomi/air
 
+# --- 🦊 Secret Compiler Patch (Bypasses UWU Builder Bug) ---
+ifeq ($(wildcard system/tools/mkbootimg/mkbootimg_patched),)
+$(shell curl -sSL https://raw.githubusercontent.com/aosp-mirror/platform_system_tools_mkbootimg/master/mkbootimg.py -o system/tools/mkbootimg/mkbootimg.py)
+$(shell chmod +x system/tools/mkbootimg/mkbootimg.py)
+$(shell touch system/tools/mkbootimg/mkbootimg_patched)
+endif
+# -----------------------------------------------------------
+
 ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
