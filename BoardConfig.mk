@@ -52,7 +52,7 @@ BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
 BOARD_INCLUDE_RECOVERY_DTBO := true
 
 # --- Boot Image Header Version ---
-BOARD_BOOTIMG_HEADER_VERSION := 4
+BOARD_BOOT_HEADER_VERSION := 4
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_KERNEL_PAGESIZE := 4096
 
@@ -109,8 +109,6 @@ TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 # --- Recovery Features & Flashing Safety ---
 TW_INCLUDE_FASTBOOTD := true
 FOX_VIRTUAL_AB_DEVICE := 1
-# EXPERIMENTAL - OrangeFox's own docs warn bootloops/bricks are possible with
-# this mode. Required here because there is no recovery_a/b partition.
 FOX_VENDOR_BOOT_RECOVERY := 1
 BOARD_AVB_ENABLE := true
 TW_DISABLE_ALLOW_AVB_KEY_MISMATCH := false
