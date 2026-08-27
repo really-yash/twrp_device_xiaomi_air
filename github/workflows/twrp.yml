@@ -1,1 +1,82 @@
+name: TWRP 12.1 - Builder
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 🛠️ Building TWRP Recovery
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Device Tree
+        uses: actions/checkout@v4
+        with:
+          path: device/xiaomi/air
+
+      - name: Free up disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
+
+      - name: Set up 16GB Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 16
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3
+          mkdir -p ~/bin
+          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+          chmod a+x ~/bin/repo
+
+      - name: Sync Official TWRP Manifest
+        run: |
+          mkdir workspace
+          cd workspace
+          git config --global user.name "Yash"
+          git config --global user.email "bloxfruits_yash@example.com"
+          ~/bin/repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 --depth=1
+          ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
+      - name: Move Device Tree to Workspace
+        run: |
+          mv device workspace/
+          # Create dummy kernel to bypass missing file errors
+          mkdir -p workspace/device/xiaomi/air/prebuilt
+          touch workspace/device/xiaomi/air/prebuilt/kernel
+
+      - name: Auto-Steal .ko Modules from Suchit's Repo
+        run: |
+          echo "Cloning Suchit's fox_air repo to steal the modules..."
+          git clone https://github.com/suchit-7x/fox_air.git /tmp/fox_air
+          echo "Creating the correct lib/modules directory in our tree..."
+          mkdir -p workspace/device/xiaomi/air/recovery/root/lib/modules
+          echo "Copying all .ko files over..."
+          cp -r /tmp/fox_air/recovery/root/lib/modules/* workspace/device/xiaomi/air/recovery/root/lib/modules/
+          echo "Nuking the old obsolete sbin folder..."
+          rm -rf workspace/device/xiaomi/air/recovery/root/sbin
+          echo "✅ Modules successfully stolen and placed in the correct Android 12+ folder!"
+
+      - name: Build TWRP vendor_boot.img
+        run: |
+          cd workspace
+          export ALLOW_MISSING_DEPENDENCIES=true
+          source build/envsetup.sh
+          lunch twrp_air-eng
+          mka adbd vendorbootimage -j$(nproc --all)
+
+      - name: Upload vendor_boot.img Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWRP-air-vendor_boot
+          path: workspace/out/target/product/air/vendor_boot.img
 
