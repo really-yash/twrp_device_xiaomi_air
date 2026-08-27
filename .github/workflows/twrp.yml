@@ -47,13 +47,13 @@ jobs:
           ~/bin/repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git -b twrp-12.1 --depth=1
           ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
-            - name: Move Device Tree to Workspace
+      - name: Move Device Tree to Workspace
         run: |
+          # Copy instead of move to avoid directory conflicts
           cp -r device/* workspace/device/
           # Create dummy kernel to bypass missing file errors
           mkdir -p workspace/device/xiaomi/air/prebuilt
           touch workspace/device/xiaomi/air/prebuilt/kernel
-
 
       - name: Auto-Steal .ko Modules from Suchit's Repo
         run: |
